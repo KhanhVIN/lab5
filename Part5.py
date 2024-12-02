@@ -15,7 +15,7 @@ import datetime
 from copy import deepcopy
 import matplotlib.pyplot as plt
 
-plt.rc('text', usetex=True)
+plt.rc('text', usetex=False)
 plt.rcParams["font.family"] = "serif"
 plt.rcParams["font.serif"] = ["Times New Roman"] + plt.rcParams["font.serif"]
 plt.rcParams["font.size"] = "12"
