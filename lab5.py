@@ -9,6 +9,38 @@ import datetime
 import networks
 import copy
 
+class Trainer:
+    def __init__(self, model, simulator, ref_vel, est_vel, est_vels, biased_vels, accels, S, nEpochs, batchSize):
+        self.model = model
+        self.est_vel = est_vel
+        self.ref_vel = ref_vel
+        self.est_vels = est_vels
+        self.biased_vels = biased_vels
+        self.accels = accels
+        self.S = S
+        self.nTrain = 200
+        self.nTest = 20
+        self.nValid = 20
+        self.nEpochs = nEpochs
+        self.simulator = simulator
+        self.validationInterval = self.nTrain // batchSize
+        
+        # Handle the number of batches and batch sizes
+        if self.nTrain < batchSize:
+            self.nBatches = 1
+            self.batchSize = [self.nTrain]
+        #############################################################################################################
+        elif self.nTrain >= batchSize:
+            self.nBatches = self.nTrain // batchSize
+            self.batchSize = [batchSize] * self.nBatches
+            
+            # Add a smaller batch for remaining samples if necessary
+            if self.nTrain % batchSize != 0:
+                self.batchSize.append(self.nTrain % batchSize)
+        
+        # Generate batch indices
+        self.batchIndex = [sum(self.batchSize[:i]) for i in range(len(self.batchSize) + 1)]
+        ###############################################################################################################
 class TrainerFlocking(Trainer):
 
     def __init__(self, model, simulator, positions, ref_vel, est_vel, est_vels, biased_vels, accels, S, nEpochs, batchSize):
